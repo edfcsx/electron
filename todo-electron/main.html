@@ -1,5 +1,37 @@
 <head>
 </head>
 <body>
-  <h1>Hello world!</h1>
+  <h1>My Todos</h1>
+  <ul></ul>
+
+  <script>
+    const electron = require('electron');
+    const { ipcRenderer } = electron;
+
+    ipcRenderer.on('todo:add', (event, todo) => {
+      const li = document.createElement('li');
+      const text = document.createTextNode(todo);
+      
+      let id = parseInt(`${Math.random() * 100}`, 10);
+
+      if (document.getElementById(id) !== null) {
+        while(document.getElementById(id) === null) {
+          id = parseInt(`${Math.random() * 100}`, 10);
+        }
+      }
+
+      li.appendChild(text);
+      li.id = id;
+      li.onclick = function() {
+        document.getElementById(id).remove();
+      };
+
+      document.querySelector('ul').appendChild(li);
+    });
+
+    ipcRenderer.on('todo:clear', () => {
+      document.querySelector('ul').innerHTML = '';
+    });
+  </script>
 </body>
+
